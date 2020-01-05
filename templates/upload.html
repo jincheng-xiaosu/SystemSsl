@@ -1,0 +1,31 @@
+{% extends "base.html"  %}
+
+{% block title %} upload {% endblock %}
+{% block navbar %}
+{{ super() }}
+<style>
+checkbox{
+width:1000px;
+
+height:1000px;
+
+}
+</style>
+{%- endblock navbar %}
+{% block content  %}
+<div class="ibox-content">
+    <div class="text-center m-t-lg">       
+        <h1>
+            更新SSL证书系统
+        </h1>
+    </div>
+
+    <hr>
+
+<form method="post" enctype="multipart/form-data">
+	{{ form.csrf_token }}
+	{{ form.files }}<br>
+	{{ form.submit(class="btn btn-primary block full-width m-b") }}<br>
+</form>
+</div>
+{% endblock %}

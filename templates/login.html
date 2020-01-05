@@ -1,0 +1,41 @@
+{% extends "base.html"  %}
+{% block title %} login {% endblock %}
+{% block body -%}
+<body class="gray-bg">
+
+    <div class="middle-box text-center loginscreen animated fadeInDown">
+        <div>
+            <div>
+
+                <h1 class="logo-name">D</h1>
+
+            </div>
+            <h3>后台版本发布</h3>
+            <p>使命在肩 无畏向前
+            </p>
+            <p>请使用邮箱登陆</p>
+                  <!--  消息通知 -->
+                  {% for message in get_flashed_messages() %}
+                  <div class="alert alert-warning">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                            {{ message }}
+                  </div>
+                  {% endfor %}
+            <form method="POST" class="m-t" role="form">
+                <div class="form-group">
+                    {{ form.email(class="form-control") }}
+                </div>
+                <div class="form-group">
+                    <!--input type="password" class="form-control" placeholder="Password" required=""-->
+                    {{ form.password(class="form-control") }}
+                </div>
+                {{ form.submit(class="btn btn-primary block full-width m-b") }}
+                
+            <p class="m-t"> <small>Inspinia we app framework base on Bootstrap 3 &copy; 2016</small> </p>
+        </div>
+    </div>
+
+    <!-- Mainly scripts -->
+<script type="text/javascript" src="{{ url_for('static', filename='js/jquery-2.1.1.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+{% endblock %}

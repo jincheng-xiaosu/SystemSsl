@@ -1,0 +1,33 @@
+{% extends "base.html"  %}
+
+{% block title %} check {% endblock %}
+{% block navbar %}
+{{ super() }}
+<style>
+checkbox{
+width:1000px;
+
+height:1000px;
+
+}
+</style>
+{%- endblock navbar %}
+{% block content  %}
+<div class="ibox-content">
+    <div class="text-center m-t-lg">       
+        <h1>
+            更新SSL证书系统
+        </h1>
+    </div>
+
+    <hr>
+<form method="POST" class="m-t" role="form">
+	{{ form.csrf_token }}
+	<label class="col-sm-2 control-label">请输入域名（要更换的证书域名），如:baidu.com</label>
+	{{ form.sslname(class="form-control") }}
+	<label class="control-label">请输入ip地址，如:192.168.100.228:22(可输入多个ip地址，以回车键作为分隔符)</label>
+	{{ form.content(class="form-control",rows=20)}}
+	{{ form.submit(class="btn btn-primary block full-width m-b") }}<br>
+</form>
+</div>
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends "base.html"  %}
+
+{% block title %} check {% endblock %}
+{% block navbar %}
+{{ super() }}
+<style>
+checkbox{
+width:1000px;
+
+height:1000px;
+
+}
+</style>
+{%- endblock navbar %}
+{% block content  %}
+<div class="ibox-content">
+    <div class="text-center m-t-lg">       
+        <h1>
+            HTML添加
+        </h1>
+    </div>
+
+    <hr>
+<textarea class="form-control" rows="20" cols="200">
+在w3school，你可以找到你所需要的所有的网站建设教程。
+</textarea>
+<form method="POST" class="m-t" role="form">
+	{{ form.csrf_token }}
+	{{ form.file(class="form-control") }}<br>
+	{{ form.submit(class="btn btn-primary block full-width m-b") }}<br>
+</form>
+</div>
+{% endblock %}

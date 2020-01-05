@@ -1,0 +1,31 @@
+{% extends "base.html"  %}
+
+{% block title %} check {% endblock %}
+{% block navbar %}
+{{ super() }}
+<style>
+checkbox{
+width:1000px;
+
+height:1000px;
+
+}
+</style>
+{%- endblock navbar %}
+{% block content  %}
+<div class="ibox-content">
+    <div class="text-center m-t-lg">       
+        <h1>
+            更新SSL证书系统
+        </h1>
+    </div>
+
+    <hr>
+<form method="POST" class="m-t" role="form">
+	{{ form.csrf_token }}
+	<label class="control-label">请复制上一步骤的信息粘贴到下面</label>
+	{{ form.content(class="form-control",rows=20)}}
+	{{ form.submit(class="btn btn-primary block full-width m-b") }}<br>
+</form>
+</div>
+{% endblock %}
