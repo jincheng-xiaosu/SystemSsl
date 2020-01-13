@@ -22,16 +22,16 @@ import sys
 
 from flask_wtf.file import FileField, FileRequired, FileAllowed
 from werkzeug.utils import secure_filename
-import importlib,sys
+#import importlib
 from configparser import ConfigParser
 
 config = ConfigParser()
 config.read('app.conf')
 
-importlib.reload(sys)
+#importlib.reload(sys)
 
-#reload(sys)
-#sys.setdefaultencoding('utf8')
+reload(sys)
+sys.setdefaultencoding('utf8')
 
 
 NGINX_DIRNAME=config.get("nginx", "nginx_dirname")
@@ -248,16 +248,33 @@ def upload():
         return redirect(url_for('check'))
     return render_template('upload.html', form = form)
 
-# 获取./ssl/目录下的文件名，返回一个list,提供一个表单的多选框；
 def get_ssl_file_name(command_line):
     res = subproress(command_line)
     if len(res) == 0:
+        names=len(res)
         print(u"失败")
+        return names
     elif len(res.split()) == 1:
-        names=res.strip().split()[0][:-1]
+        print(res+"11111111")
+        if len(res.decode('utf-8').split(".")) == 3:
+            names=res.strip().split()[0][:-1]
+        else:
+            names="not domain"
         return names
     else:
-        flash("ss")
+        names=""
+        for i in res.split():
+            if len(i.decode('utf-8').split(".")) == 3:
+                names=i.strip().split()[0][:-1]
+            else:
+                namess="not domain"
+        if names:
+           return names
+        else:
+           names=namess
+           return names
+
+        flash(res)
 
 @app.route('/check',  methods=['GET',"POST"])
 @login_required
@@ -269,17 +286,25 @@ def check():
         ips_num=len(ips_port)
         flash(u'检查'+ str(ips_num)+'个ip地址')
         for ips in ips_port:
-            ip=ips[:-3]
-            port=ips[-2:]
-            command_line1 = "ssh -p " + str(port) + " root@"+str(ip) +" \" grep 'crt' " + str(NGINX_DIRNAME) + "|sort -u|grep '"+ str(sslname)+"' | awk '{print \$2}'\""
-            command_line2 = "ssh -p " + str(port) + " root@"+str(ip) +" \" grep 'key' " + str(NGINX_DIRNAME) + "|sort -u|grep '"+ str(sslname)+"' | awk '{print \$2}'\""
+            ip=ips.split(":")[0]
+            port=ips.split(":")[1]
+            command_line1 = "ssh -p " + str(port) + " root@"+str(ip) +" \" grep -nr 'crt' " + str(NGINX_DIRNAME) + "|sort -u|grep '"+ str(sslname)+"' | awk '{print \$3}'\""
+            command_line2 = "ssh -p " + str(port) + " root@"+str(ip) +" \" grep -nr 'key' " + str(NGINX_DIRNAME) + "|sort -u|grep '"+ str(sslname)+"' | awk '{print \$3}'\""
             print(command_line1)
             print(command_line2)
             crt_names=get_ssl_file_name(command_line1)
+            print(crt_names)
             key_names=get_ssl_file_name(command_line2)
-            if key_names == None or crt_names == None:
+            if crt_names == 0:
+                flash("命令执行失败，请检查nginx的配置路径，命令为："+command_line1)
+                continue
+            elif crt_names == "not domain":
+                flash("已获取到域名，但无法匹配匹配到"+sslname+"，IP地址为："+ip+","+port)
+                continue
+            elif key_names == None or crt_names == None:
                 flash("无法获取证书文件路径，请检查nginx的配置路径，IP地址为："+ip+","+port)
-                return render_template('check.html',form=Form)
+                continue
+                #return render_template('check.html',form=Form)
             crt_names=get_ssl_file_name(command_line1).decode('utf-8')
             key_names=get_ssl_file_name(command_line2).decode('utf-8')
             flash(str(ip)+','+str(port)+','+str(crt_names)+','+str(key_names))
@@ -357,8 +382,8 @@ def peizhi():
             config.write(f)
         dir_path = os.path.dirname(os.path.abspath(__file__))
         local_file_name=dir_path+"/"+os.path.basename(__file__)
-        print("22222")
-        command_line="sed -i \"s/22222/222222/g\" " + local_file_name
+        print("222222")
+        command_line="sed -i \"s/222222/2222222/g\" " + local_file_name
         res = subprores(command_line)
         print(command_line)
         print(nginxdir)
